@@ -1,0 +1,19 @@
+body {
+    background-color: pink;
+    margin: 0;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.rectangle {
+    position: absolute;
+    /* background-color: blue; */
+    border-radius: 5px;
+   
+    
+    /* box-shadow: 0 0 5px 10px black; */
+}
