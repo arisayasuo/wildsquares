@@ -17,3 +17,15 @@ body {
     
     /* box-shadow: 0 0 5px 10px black; */
 }
+
+.line {
+    width: 1px;
+    height: 100vh;
+    background-color: black;
+    position: absolute;
+}
+
+.redline {
+    background-color: red;
+}
+

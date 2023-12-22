@@ -4,8 +4,35 @@ var maxRectangle = 1;
 var rectangleOffset;
 var selectedRectangle;
 
+//function to create a div and appen to container(line)
+function createLine(orientation) {
+    //false is horizontal vertical is vertical ()
+    var line = document.createElement("div");
+    container.appendChild(line);
 
-// function to create a div and append to container
+    var min = 0;
+    var max = orientation ? window.innerHeight : window.innerWidth;
+    var width = 1;
+
+    var direction = orientation ? 'left' : 'top';
+    var length = orientation ? 'height' : 'width';
+    var thickness = orientation ? 'width' : 'height';
+    
+    var startingPoint = getDistance(min, max, width);
+
+    line.style[direction] = startingPoint + "px";
+    line.style[length] = max + 'px';
+    line.style[thickness] = width + 'px';
+    line.style.position = 'absolute';
+    line.style.backgroundColor = 'black'
+
+    return line;
+}
+
+var line1 = createLine(true);
+var line2 = createLine(false);
+
+// function to create a div and append to container(rectangle)
 function createRectangle() {
     var rectangle = document.createElement("div");
     rectangle.classList.add("rectangle");
@@ -96,8 +123,8 @@ function dragStart(event)　{
 function dragMove(event) {
     if (!rectangleOffset) return;
     
-    selectedRectangle.style.left = event.clientX + "px";
-    selectedRectangle.style.top = event.clientY + "px";
+    selectedRectangle.style.left = event.clientX - rectangleOffset.x + "px";
+    selectedRectangle.style.top = event.clientY - rectangleOffset.y + "px";
 }
 
 function dragEnd() {
@@ -105,9 +132,42 @@ function dragEnd() {
     selectedRectangle = undefined;
 }
 
+//calculate the intersection and show the line while the rectangles are passing.
+//i should call this function somewhere else. browser specific. 
+function calculateIntersecion(line) {
+    //lineのxが、rectangleのx最小値から最大値までの間にあるかどうか
+    if (!selectedRectangle) return;
+
+    var rectLeft = selectedRectangle.offsetLeft;
+    var rectRight = rectLeft + selectedRectangle.offsetWidth;
+    var rectTop = selectedRectangle.offsetTop;
+    var rectBottom = rectTop + selectedRectangle.offsetHeight;
+
+    var lineLeft = line.offsetLeft;
+    var lineRight = lineLeft + line.offsetWidth;
+    var lineTop = line.offsetTop;
+    var lineBottom = lineTop + line.offsetHeight;
 
 
-//230512HW make rectangle position max to 50 pixel from RIGHT not left.think
+    var isLeftCollide = rectLeft <= lineLeft;
+    var isRightCollide = rectRight >= lineRight;
+    var isTopCollide = rectTop >= lineTop;
+    var isBottomCollide = rectBottom <= lineBottom;
+    
+    var isCollided = (isLeftCollide && isRightCollide) || (isTopCollide && isBottomCollide);
+    //console.log('L:', isLeftCollide,'R:',isRightCollide, 'T:', isTopCollide, 'B:', isBottomCollide, "t: ", lineTop, ' - ', rectTop);
+    line.style.backgroundColor = isCollided ? 'red' : 'black';
+}
+
+function checkIntersection() {
+    requestAnimationFrame(checkIntersection);
+    calculateIntersecion(line1);
+    calculateIntersecion(line2);
+}
+
+checkIntersection();
+
+//position max to 50 pixel from RIGHT not left.think
 //230512HW make getSize function to random rectangle size with 150 300 (width and height) DO IT.
 
 //230609HW make rectangle show different color everytime.manipulate the color code.
@@ -119,6 +179,15 @@ function dragEnd() {
 //230622HW Read about data types on javascript!! 
 //230622HW How do I make dragmove no extra global valuable. use the global var already there.
 
+//230922HW Draw a vertical line (just 1 line) from JS randomely on the canvas. Hidden by default.
+//show it while intersect with the rectangle.
+
+//231020HW When the rectangle crosses the line, make the line become red. 
+//write completely independent function for this. i have everything defined.
+//run the function all the time but checking all the time.(loop or requestanimeframe)
+
+//231117HW Add the horizontal line and do the same thing as above.
+// (in the future will do it with multiple lines and rectangle)
 
 
 
@@ -152,6 +221,9 @@ function dragEnd() {
 //     rectangle.style.top = topValue + "px";
 //     rectangle.style.left = leftValue + "px";
 // }
+
+//Write the code which return something.
+
 
 
 
