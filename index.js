@@ -132,30 +132,31 @@ function dragEnd() {
     selectedRectangle = undefined;
 }
 
+
+function getCoords(shape) {
+    return {
+       x1: shape.offsetLeft,
+       x2: shape.offsetLeft + shape.offsetWidth,
+       y1: shape.offsetTop,
+       y2: shape.offsetTop + shape.offsetHeight
+    }
+
+}
+
 //calculate the intersection and show the line while the rectangles are passing.
 //i should call this function somewhere else. browser specific. 
 function calculateIntersecion(line) {
     //lineのxが、rectangleのx最小値から最大値までの間にあるかどうか
     if (!selectedRectangle) return;
 
-    var rectLeft = selectedRectangle.offsetLeft;
-    var rectRight = rectLeft + selectedRectangle.offsetWidth;
-    var rectTop = selectedRectangle.offsetTop;
-    var rectBottom = rectTop + selectedRectangle.offsetHeight;
+    var rectCoords = getCoords(selectedRectangle);
+    //HW1227 Move this lineCoords somewhere else and calculate once.
+    var lineCoords = getCoords(line);
 
-    var lineLeft = line.offsetLeft;
-    var lineRight = lineLeft + line.offsetWidth;
-    var lineTop = line.offsetTop;
-    var lineBottom = lineTop + line.offsetHeight;
+    var isVerticalInRange = lineCoords.x1 >= rectCoords.x1 && lineCoords.x2 <= rectCoords.x2;
+    var isHorizontalInRange = lineCoords.y1 >= rectCoords.y1 && lineCoords.y2 <= rectCoords.y2;
 
-
-    var isLeftCollide = rectLeft <= lineLeft;
-    var isRightCollide = rectRight >= lineRight;
-    var isTopCollide = rectTop >= lineTop;
-    var isBottomCollide = rectBottom <= lineBottom;
-    
-    var isCollided = (isLeftCollide && isRightCollide) || (isTopCollide && isBottomCollide);
-    //console.log('L:', isLeftCollide,'R:',isRightCollide, 'T:', isTopCollide, 'B:', isBottomCollide, "t: ", lineTop, ' - ', rectTop);
+    var isCollided = isVerticalInRange || isHorizontalInRange;
     line.style.backgroundColor = isCollided ? 'red' : 'black';
 }
 
