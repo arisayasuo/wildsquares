@@ -1,10 +1,9 @@
-// function to write rectangle in the page
 var container = document.querySelector(".container");
 var maxRectangle = 1;
 var rectangleOffset;
 var selectedRectangle;
+var maxLines = 8;
 
-//function to create a div and appen to container(line)
 function createLine(orientation) {
     //false is horizontal vertical is vertical ()
     var line = document.createElement("div");
@@ -29,10 +28,22 @@ function createLine(orientation) {
     return line;
 }
 
-var line1 = createLine(true);
-var line2 = createLine(false);
+function getLinesAndCoords(max) {
+    var linesAndCoords = new Map();
 
-// function to create a div and append to container(rectangle)
+    for (i = 0; i < max; i++) {
+        var direction = !Math.round(Math.random());
+        var line = createLine(direction);
+        var coords = getCoords(line);
+
+        linesAndCoords.set(line, coords);
+    }
+
+    return linesAndCoords;
+}
+
+var linesAndCoords = getLinesAndCoords(maxLines);
+
 function createRectangle() {
     var rectangle = document.createElement("div");
     rectangle.classList.add("rectangle");
@@ -62,8 +73,6 @@ function createRectangle() {
     rectangle.style.left = left + "px";
 
 }
-
-//createRectangle();
 
 function drawRectangle(num){
     for(current = 0; current < num; current++) {
@@ -142,16 +151,16 @@ function getCoords(shape) {
     }
 
 }
+//cmd  & function
 
 //calculate the intersection and show the line while the rectangles are passing.
 //i should call this function somewhere else. browser specific. 
-function calculateIntersecion(line) {
+
+function calculateIntersecion(line, lineCoords) {
     //lineのxが、rectangleのx最小値から最大値までの間にあるかどうか
     if (!selectedRectangle) return;
 
     var rectCoords = getCoords(selectedRectangle);
-    //HW1227 Move this lineCoords somewhere else and calculate once.
-    var lineCoords = getCoords(line);
 
     var isVerticalInRange = lineCoords.x1 >= rectCoords.x1 && lineCoords.x2 <= rectCoords.x2;
     var isHorizontalInRange = lineCoords.y1 >= rectCoords.y1 && lineCoords.y2 <= rectCoords.y2;
@@ -162,11 +171,19 @@ function calculateIntersecion(line) {
 
 function checkIntersection() {
     requestAnimationFrame(checkIntersection);
-    calculateIntersecion(line1);
-    calculateIntersecion(line2);
+
+    linesAndCoords.forEach((value, key) => calculateIntersecion(key, value))
 }
 
 checkIntersection();
+
+window.addEventListener('resize', function(event) {
+    updateLines();
+});
+
+function updateLines(){
+    linesAndCoords.forEach((value, key) => key.style[length] = max + 'px');
+}
 
 //position max to 50 pixel from RIGHT not left.think
 //230512HW make getSize function to random rectangle size with 150 300 (width and height) DO IT.
@@ -190,9 +207,14 @@ checkIntersection();
 //231117HW Add the horizontal line and do the same thing as above.
 // (in the future will do it with multiple lines and rectangle)
 
+//240118 Read and show how to iterate over map keys, how to use the key as a value. using linescoords and iterate over it. with the key itself.
+
+//HW1227 Move this lineCoords somewhere else and calculate once.
 
 
+//240202HW Everytime user change the viewport size, extend the line length (horizontal and vertical)
 
+// 240126HW: 36-52 to be 1 function to return lines and coords using map. Write better function. To put lines and line coords into an object and put it in map. => less info and put it in map. Read and understand more about map and will figure it out. 
 
 
 
