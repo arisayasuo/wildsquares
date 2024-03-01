@@ -4,11 +4,12 @@ var rectangleOffset;
 var selectedRectangle;
 var maxLines = 8;
 
+// Make this to a constructor ?! Maybe no.
 function createLine(orientation) {
     //false is horizontal vertical is vertical ()
     var line = document.createElement("div");
     container.appendChild(line);
-
+　
     var min = 0;
     var max = orientation ? window.innerHeight : window.innerWidth;
     var width = 1;
@@ -20,13 +21,40 @@ function createLine(orientation) {
     var startingPoint = getDistance(min, max, width);
 
     line.style[direction] = startingPoint + "px";
-    line.style[length] = max + 'px';
+    line.style[length] = '100%';
     line.style[thickness] = width + 'px';
     line.style.position = 'absolute';
     line.style.backgroundColor = 'black'
 
     return line;
 }
+
+
+// function Line(orientation) {
+
+
+//     //false is horizontal vertical is vertical ()
+//     var line = document.createElement("div");
+//     container.appendChild(line);
+// 　
+//     var min = 0;
+//     var max = orientation ? window.innerHeight : window.innerWidth;
+//     var width = 1;
+
+//     var direction = orientation ? 'left' : 'top';
+//     var length = orientation ? 'height' : 'width';
+//     var thickness = orientation ? 'width' : 'height';
+    
+//     var startingPoint = getDistance(min, max, width);
+
+//     line.style[direction] = startingPoint + "px";
+//     line.style[length] = max + 'px';
+//     line.style[thickness] = width + 'px';
+//     line.style.position = 'absolute';
+//     line.style.backgroundColor = 'black'
+
+//     return line;
+// }
 
 function getLinesAndCoords(max) {
     var linesAndCoords = new Map();
@@ -177,13 +205,7 @@ function checkIntersection() {
 
 checkIntersection();
 
-window.addEventListener('resize', function(event) {
-    updateLines();
-});
 
-function updateLines(){
-    linesAndCoords.forEach((value, key) => key.style[length] = max + 'px');
-}
 
 //position max to 50 pixel from RIGHT not left.think
 //230512HW make getSize function to random rectangle size with 150 300 (width and height) DO IT.
@@ -246,13 +268,3 @@ function updateLines(){
 // }
 
 //Write the code which return something.
-
-
-
-
-
-
-
-
-
-
